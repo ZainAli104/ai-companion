@@ -1,7 +1,7 @@
 import React from "react";
 
-import {Navbar} from "@/components/navbar";
-import {Sidebar} from "@/components/sidebar";
+import {Navbar} from "@/components/navbar-components/navbar";
+import {Sidebar} from "@/components/navbar-components/sidebar";
 
 const RootLayout = ({children}: { children: React.ReactNode }) => {
     return (

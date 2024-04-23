@@ -1,7 +1,7 @@
 import {Menu} from "lucide-react";
 
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
-import {Sidebar} from "@/components/sidebar";
+import {Sidebar} from "@/components/navbar-components/sidebar";
 
 export const MobileSidebar = () => {
     return (
