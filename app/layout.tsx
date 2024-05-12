@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 
 import {ThemeProvider} from "@/provider/theme-provider";
+import NextNProgressClient from "@/components/ui/next-progress";
 
 import "./globals.css";
 import {cn} from "@/lib/utils";
@@ -25,6 +26,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
           <body className={cn("bg-secondary", inter.className)}>
               <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                  <NextNProgressClient />
                   {children}
               </ThemeProvider>
           </body>
