@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 
+import {cn} from "@/lib/utils";
+import {Toaster} from "@/components/ui/toaster";
 import {ThemeProvider} from "@/provider/theme-provider";
 import NextNProgressClient from "@/components/ui/next-progress";
 
 import "./globals.css";
-import {cn} from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
               <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                   <NextNProgressClient />
                   {children}
+                  <Toaster />
               </ThemeProvider>
           </body>
         </html>
