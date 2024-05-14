@@ -27,6 +27,26 @@ model Companion {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 
-  category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  messages Message[]
+}
+
+enum Role {
+  user
+  system
+}
+
+model Message {
+  id       String   @id @default(uuid())
+  role     Role
+  content  String   @db.Text
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  companionId String
+  userid      String
+
+  companion Companion @relation(fields: [companionId], references: [id], onDelete: Cascade)
 }
