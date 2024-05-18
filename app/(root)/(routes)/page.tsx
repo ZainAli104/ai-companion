@@ -19,7 +19,7 @@ const RootPage = async ({searchParams}: RootPageProps) => {
             }
         },
         orderBy: {
-            createAt: "desc"
+            createdAt: "desc"
         },
         include: {
             _count: {
