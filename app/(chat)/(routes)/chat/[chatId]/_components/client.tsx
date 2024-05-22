@@ -1,8 +1,12 @@
 "use client";
 
+import {useCompletion} from "ai/react";
+import {useRouter} from "next/navigation";
+import {FormEvent, useState} from "react";
 import {Companion, Message} from "@prisma/client";
 
 import {ChatHeader} from "./chat-header";
+import {ChatForm} from "@/components/chat-form";
 
 interface ChatClientProps {
     companion: Companion & {
@@ -14,9 +18,53 @@ interface ChatClientProps {
 }
 
 export const ChatClient = ({companion}: ChatClientProps) => {
+    const router = useRouter();
+    const [messages, setMessages] = useState<any[]>(companion.messages);
+
+    const {
+        input,
+        isLoading,
+        handleInputChange,
+        handleSubmit,
+        setInput
+    } = useCompletion({
+        api: `/api/chat/${companion.id}`,
+        onFinish(prompt, completion) {
+            const systemMessage = {
+                role: 'system',
+                content: completion,
+            }
+
+            setMessages((current) => [...current, systemMessage]);
+            setInput('');
+
+            router.refresh();
+        }
+    });
+
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+        const userMessage = {
+            role: 'user',
+            content: input,
+        }
+
+        setMessages((current) => [...current, userMessage]);
+
+        handleSubmit(e);
+    };
+
     return (
-        <div>
+        <div className="flex flex-col h-full p-4 space-y-2">
             <ChatHeader companion={companion} />
+            <div>
+                Messages TODO
+            </div>
+            <ChatForm
+                onSubmit={onSubmit}
+                handleInputChange={handleInputChange}
+                input={input}
+                isLoading={isLoading}
+            />
         </div>
     );
 };

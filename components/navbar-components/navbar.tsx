@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import {Sparkles} from "lucide-react";
 import {Poppins} from "next/font/google";
 import {UserButton} from "@clerk/nextjs";
-import {Sparkles} from "lucide-react";
 
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
@@ -35,7 +35,7 @@ export const Navbar = () => {
                     <Sparkles className="h-4 w-4 fill-white text-white ml-2" />
                 </Button>
                 <ModeToggle />
-                <UserButton />
+                <UserButton afterSignOutUrl="/" />
             </div>
         </nav>
     );
