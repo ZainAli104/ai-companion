@@ -7,6 +7,8 @@ import {Companion, Message} from "@prisma/client";
 
 import {ChatHeader} from "./chat-header";
 import {ChatForm} from "@/components/chat-form";
+import {ChatMessages} from "@/components/chat-messages";
+import {ChatMessageProps} from "@/components/chat-message";
 
 interface ChatClientProps {
     companion: Companion & {
@@ -19,7 +21,7 @@ interface ChatClientProps {
 
 export const ChatClient = ({companion}: ChatClientProps) => {
     const router = useRouter();
-    const [messages, setMessages] = useState<any[]>(companion.messages);
+    const [messages, setMessages] = useState<ChatMessageProps[]>(companion.messages);
 
     const {
         input,
@@ -30,7 +32,7 @@ export const ChatClient = ({companion}: ChatClientProps) => {
     } = useCompletion({
         api: `/api/chat/${companion.id}`,
         onFinish(prompt, completion) {
-            const systemMessage = {
+            const systemMessage: ChatMessageProps = {
                 role: 'system',
                 content: completion,
             }
@@ -43,7 +45,7 @@ export const ChatClient = ({companion}: ChatClientProps) => {
     });
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-        const userMessage = {
+        const userMessage: ChatMessageProps = {
             role: 'user',
             content: input,
         }
@@ -56,14 +58,16 @@ export const ChatClient = ({companion}: ChatClientProps) => {
     return (
         <div className="flex flex-col h-full p-4 space-y-2">
             <ChatHeader companion={companion} />
-            <div>
-                Messages TODO
-            </div>
-            <ChatForm
-                onSubmit={onSubmit}
-                handleInputChange={handleInputChange}
-                input={input}
+            <ChatMessages
+                messages={messages}
                 isLoading={isLoading}
+                companion={companion}
+            />
+            <ChatForm
+                isLoading={isLoading}
+                input={input}
+                handleInputChange={handleInputChange}
+                onSubmit={onSubmit}
             />
         </div>
     );
