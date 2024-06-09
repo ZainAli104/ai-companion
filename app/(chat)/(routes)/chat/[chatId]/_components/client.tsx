@@ -31,7 +31,7 @@ export const ChatClient = ({companion}: ChatClientProps) => {
         setInput
     } = useCompletion({
         api: `/api/chat/${companion.id}`,
-        onFinish(prompt, completion) {
+        onFinish(_prompt, completion) {
             const systemMessage: ChatMessageProps = {
                 role: 'system',
                 content: completion,
