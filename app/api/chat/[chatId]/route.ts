@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {currentUser} from "@clerk/nextjs";
 import {Replicate} from "@langchain/community/llms/replicate";
-import {StreamingTextResponse, LangChainStream, LangChainAdapter} from "ai";
+import {StreamingTextResponse, LangChainStream} from "ai";
 
 import prismadb from "@/lib/prismadb";
 import {MemoryManager} from "@/lib/memory";
@@ -33,7 +33,7 @@ export async function POST(
                     create: {
                         content: prompt,
                         role: "user",
-                        userid: user.id
+                        userId: user.id
                     }
                 }
             }
@@ -126,7 +126,7 @@ export async function POST(
                         create: {
                             content: response.trim(),
                             role: "system",
-                            userid: user.id
+                            userId: user.id
                         }
                     }
                 }

@@ -23,6 +23,9 @@ const ChatIdPage = async ({params}: ChatIdPageProps) => {
         },
         include: {
             messages: {
+                where: {
+                    userId
+                },
                 orderBy: {
                     createdAt: "asc"
                 }

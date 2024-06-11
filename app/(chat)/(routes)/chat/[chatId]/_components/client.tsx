@@ -31,11 +31,7 @@ export const ChatClient = ({companion}: ChatClientProps) => {
         setInput
     } = useCompletion({
         api: `/api/chat/${companion.id}`,
-        onResponse: (response) => {
-            console.log("C2: ", response);
-        },
         onFinish: async (_prompt, completion) => {
-            console.log("C1");
             const systemMessage: ChatMessageProps = {
                 role: 'system',
                 content: completion,
@@ -47,28 +43,6 @@ export const ChatClient = ({companion}: ChatClientProps) => {
             router.refresh();
         },
     });
-
-    // const {
-    //     input,
-    //     isLoading,
-    //     handleInputChange,
-    //     handleSubmit,
-    //     setInput,
-    // } = useCompletion({
-    //     api: `/api/chat/${companion.id}`,
-    //     onFinish(_prompt, completion) {
-    //         console.log("C1");
-    //         const systemMessage: ChatMessageProps = {
-    //             role: "system",
-    //             content: completion
-    //         };
-    //
-    //         setMessages((current) => [...current, systemMessage]);
-    //         setInput("");
-    //
-    //         router.refresh();
-    //     },
-    // });
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         const userMessage: ChatMessageProps = {
