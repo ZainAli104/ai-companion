@@ -31,7 +31,11 @@ export const ChatClient = ({companion}: ChatClientProps) => {
         setInput
     } = useCompletion({
         api: `/api/chat/${companion.id}`,
-        onFinish(_prompt, completion) {
+        onResponse: (response) => {
+            console.log("C2: ", response);
+        },
+        onFinish: async (_prompt, completion) => {
+            console.log("C1");
             const systemMessage: ChatMessageProps = {
                 role: 'system',
                 content: completion,
@@ -41,8 +45,30 @@ export const ChatClient = ({companion}: ChatClientProps) => {
             setInput('');
 
             router.refresh();
-        }
+        },
     });
+
+    // const {
+    //     input,
+    //     isLoading,
+    //     handleInputChange,
+    //     handleSubmit,
+    //     setInput,
+    // } = useCompletion({
+    //     api: `/api/chat/${companion.id}`,
+    //     onFinish(_prompt, completion) {
+    //         console.log("C1");
+    //         const systemMessage: ChatMessageProps = {
+    //             role: "system",
+    //             content: completion
+    //         };
+    //
+    //         setMessages((current) => [...current, systemMessage]);
+    //         setInput("");
+    //
+    //         router.refresh();
+    //     },
+    // });
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         const userMessage: ChatMessageProps = {
@@ -57,7 +83,7 @@ export const ChatClient = ({companion}: ChatClientProps) => {
 
     return (
         <div className="flex flex-col h-full p-4 space-y-2">
-            <ChatHeader companion={companion} />
+            <ChatHeader companion={companion}/>
             <ChatMessages
                 messages={messages}
                 isLoading={isLoading}
