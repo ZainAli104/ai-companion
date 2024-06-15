@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 
 import {cn} from "@/lib/utils";
 import {Toaster} from "@/components/ui/toaster";
+import {ProModal} from "@/components/modals/pro-modal";
 import {ThemeProvider} from "@/provider/theme-provider";
 import NextNProgressClient from "@/components/ui/next-progress";
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <body className={cn("bg-secondary", inter.className)}>
               <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                   <NextNProgressClient />
+                  <ProModal />
                   {children}
                   <Toaster />
               </ThemeProvider>
