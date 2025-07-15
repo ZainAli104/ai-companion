@@ -73,8 +73,9 @@ export class MemoryManager {
             byScore: true
         });
 
-        result = result.slice(-30).reverse();
-        const recentChats = result.reverse().join("\n");
+        // result = result.slice(-30).reverse();
+        // const recentChats = result.reverse().join("\n");
+        const recentChats = result.slice(-30).reverse().join("\n");
         return recentChats;
     }
 
