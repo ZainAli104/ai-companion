@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {currentUser} from "@clerk/nextjs";
-import {Replicate} from "@langchain/community/llms/replicate";
-import {StreamingTextResponse, LangChainStream} from "ai";
+import {ChatOpenAI} from "@langchain/openai";
+import {StreamingTextResponse} from "ai";
 
 import prismadb from "@/lib/prismadb";
 import {MemoryManager} from "@/lib/memory";
@@ -49,7 +49,7 @@ export async function POST(
         const companionKey = {
             companionName: name,
             userId: user.id,
-            modelName: "llama2-13b"
+            modelName: "gpt-5-mini"
         };
 
         const memoryManager = await MemoryManager.getInstance();
@@ -74,38 +74,30 @@ export async function POST(
             relevantHistory = similarDocs.map((doc) => doc.pageContent).join("\n");
         }
 
-        const {handlers} = LangChainStream();
-
-        const model = new Replicate({
-            model: "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
-            input: {
-                max_length: 2048,
-            },
-            apiKey: process.env.REPLICATE_API_TOKEN,
-            callbacks: [handlers],
+        const model = new ChatOpenAI({
+            model: "gpt-5-mini",
+            apiKey: process.env.OPENAI_API_KEY,
         });
 
         model.verbose = true;
 
         const resp = String(
-            await model
+            (await model
                 .invoke(`
                 ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${companion.name}: prefix.
                 Direct start answering the user's question.
-                
+
                 ${companion.instructions}
-                
+
                 Below are the relevant details about ${companion.name}'s past and the conversation you are in.
                 ${relevantHistory}
-                
+
                 ${recentChatHistory}\n${companion.name}:
             `)
-                .catch(console.error)
+                .catch(console.error))?.content ?? ""
         );
 
-        const cleaned = resp.replaceAll(",", "");
-        const chunks = cleaned.split("\n");
-        const response = chunks[0];
+        const response = resp.trim();
 
         var Readable = require('stream').Readable;
         let s = new Readable();

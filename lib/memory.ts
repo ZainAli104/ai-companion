@@ -9,6 +9,12 @@ export type CompanionKey = {
     userId: string;
 }
 
+// Redis history is a cache in front of the permanent `Message` table in Postgres.
+// Each companion's history key expires after this many seconds of inactivity to cap
+// RAM usage. The TTL is refreshed on every write (sliding expiration), so active
+// companions stay cached and idle ones are evicted automatically.
+const HISTORY_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
+
 export class MemoryManager {
     private static instance: MemoryManager;
     private history: Redis;
@@ -60,6 +66,10 @@ export class MemoryManager {
             member: text
         });
 
+        // Refresh the sliding 30-day expiry on every write so active chats stay
+        // cached and idle ones are evicted to free RAM.
+        await this.history.expire(key, HISTORY_TTL_SECONDS);
+
         return result;
     }
 
@@ -96,5 +106,8 @@ export class MemoryManager {
             await this.history.zadd(key, { score: counter, member: line });
             counter += 1;
         }
+
+        // Apply the same 30-day expiry when the key is first seeded.
+        await this.history.expire(key, HISTORY_TTL_SECONDS);
     }
 }

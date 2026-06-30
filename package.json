@@ -43,7 +43,6 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
     "react-spinners": "^0.13.8",
-    "replicate": "^0.29.4",
     "sharp": "^0.33.3",
     "stripe": "^15.11.0",
     "tailwind-merge": "^2.2.2",
